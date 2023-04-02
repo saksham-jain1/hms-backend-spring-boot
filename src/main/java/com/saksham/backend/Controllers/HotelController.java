@@ -1,0 +1,86 @@
+package com.saksham.backend.Controllers;
+
+import java.net.URLDecoder;
+import java.nio.charset.StandardCharsets;
+import java.time.LocalDate;
+import java.util.List;
+
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
+import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestParam;
+import org.springframework.web.bind.annotation.RestController;
+
+import com.saksham.backend.Mappers.HotelMapper;
+import com.saksham.backend.Models.Hotel;
+
+@RestController
+@RequestMapping("/api/hotel")
+public class HotelController {
+    @Autowired
+    public HotelMapper hotelMapper;
+
+    @GetMapping
+    public ResponseEntity<?> search(@RequestParam(required = false) String name,
+            @RequestParam(required = false, defaultValue = "0") int id,
+            @RequestParam(required = false) String state,
+            @RequestParam(required = false, defaultValue = "id asc") String sort,
+            @RequestParam(required = false, defaultValue = "10") int Limit) {
+        try {
+            sort = URLDecoder.decode(sort, StandardCharsets.UTF_8);
+            if (id != 0) {
+                Hotel hotel;
+                hotel = hotelMapper.seachById(id);
+                if (hotel != null)
+                    return ResponseEntity.ok(hotel);
+            } else {
+                List<Hotel> hotelList;
+                if (name != null) {
+                    String decoded = URLDecoder.decode(name, StandardCharsets.UTF_8);
+                    hotelList = hotelMapper.seachByName("%" + decoded + "%", Limit, sort);
+                } else if (state != null) {
+
+                    String decoded = URLDecoder.decode(state, StandardCharsets.UTF_8);
+                    hotelList = hotelMapper.seachByState(decoded, Limit, sort);
+                } else {
+                    hotelList = hotelMapper.seachAll(Limit, sort);
+                }
+                if (hotelList.size() != 0) {
+                    return ResponseEntity.ok(hotelList);
+                }
+            }
+            return ResponseEntity.status(HttpStatus.NOT_FOUND).body("hotels not found");
+        } catch (Exception e) {
+            e.printStackTrace();
+            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).build();
+        }
+
+    }
+
+    @GetMapping("/advanced")
+    public ResponseEntity<?> advanceSearch(@RequestParam String state, @RequestParam String city,
+            @RequestParam(required = false) LocalDate checkIn,
+            @RequestParam(required = false) LocalDate checkOut,
+            @RequestParam(required = false, defaultValue = "id asc") String sort,
+            @RequestParam(required = false, defaultValue = "10") int Limit) {
+        try {
+            state = URLDecoder.decode(state, StandardCharsets.UTF_8);
+            city = URLDecoder.decode(city, StandardCharsets.UTF_8);
+            List<Hotel> hotelList;
+            if (checkOut != null && checkIn != null) {
+                hotelList = hotelMapper.advanceSearch(state, city, checkIn, checkOut, Limit, sort);
+            } else {
+                hotelList = hotelMapper.advanceStateSearch(state, city, Limit, sort);
+            }
+            if (hotelList.size() != 0) {
+                return ResponseEntity.ok(hotelList);
+            }
+            return ResponseEntity.status(HttpStatus.NOT_FOUND).body("No hotels found");
+        } catch (Exception e) {
+            e.printStackTrace();
+            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).build();
+        }
+    }
+}

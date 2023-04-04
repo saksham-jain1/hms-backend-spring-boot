@@ -1,6 +1,7 @@
 package com.saksham.backend.Models;
 
 import java.time.LocalDate;
+import java.util.List;
 
 import lombok.AllArgsConstructor;
 import lombok.Data;
@@ -10,7 +11,8 @@ import lombok.NoArgsConstructor;
 @NoArgsConstructor
 @AllArgsConstructor
 public class Bookings {
-    private int id,userId,rooms;
-    private String name,email,address,phoneNo,aadharNo;
-    private LocalDate checkIn,checkOut;
+    private int id, userId, rooms, hotelId, amt;
+    private String name, email, address, phoneNo, aadharNo;
+    private LocalDate checkIn, checkOut;
+    private List<Integer> roomNos;
 }

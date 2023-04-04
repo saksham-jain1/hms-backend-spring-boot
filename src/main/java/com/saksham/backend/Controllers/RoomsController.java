@@ -22,8 +22,9 @@ public class RoomsController {
 
     @GetMapping
     public ResponseEntity<?> searchAvailability(@RequestParam int hotelId,
-            @RequestParam(required = false, defaultValue = "1") int n, @RequestParam LocalDate checkIn,
-            @RequestParam LocalDate checkOut, @RequestParam(required = false, defaultValue = "AC Room") String type) {
+            @RequestParam(required = false, defaultValue = "1") int n,
+            @RequestParam LocalDate checkIn,@RequestParam LocalDate checkOut,
+            @RequestParam(required = false, defaultValue = "AC Room") String type) {
         try {
             if (n == 1) {
                 Rooms room;
@@ -34,9 +35,9 @@ public class RoomsController {
             }
             List<Rooms> rooms;
             rooms = roomsMapper.getRooms(hotelId, n, type, checkIn, checkOut);
-            if (rooms.size()==n)
+            if (rooms.size() == n)
                 return ResponseEntity.ok(rooms);
-            return ResponseEntity.status(HttpStatus.NOT_FOUND).body("Only "+rooms.size() + " Rooms not available");
+            return ResponseEntity.status(HttpStatus.NOT_FOUND).body("Only " + rooms.size() + " Rooms not available");
         } catch (Exception e) {
             e.printStackTrace();
             return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).build();

@@ -45,8 +45,8 @@ public class BookingsController {
             bookings = bookingsMapper.getBookings(userId);
             for (Bookings b : bookings) {
                 BillsController billsController = new BillsController();
-                if(now.isAfter(b.getCheckOut()))
-                b.setAmt(billsController.getBillAmt(b.getId()));
+                if (b.getCheckIn() != null && b.getCheckOut() != null && now.isAfter(b.getCheckOut()))
+                    b.setAmt(billsController.getBillAmt(b.getId()));
             }
             if (bookings != null)
                 return ResponseEntity.ok(bookings);

@@ -27,25 +27,28 @@ public class HotelController {
             @RequestParam(required = false, defaultValue = "0") int id,
             @RequestParam(required = false) String state,
             @RequestParam(required = false, defaultValue = "id asc") String sort,
-            @RequestParam(required = false, defaultValue = "10") int Limit) {
+            @RequestParam(required = false, defaultValue = "10") int Limit,
+            @RequestParam(required = false, defaultValue = "") String db) {
         try {
             sort = URLDecoder.decode(sort, StandardCharsets.UTF_8);
+            if (db.length() != 0)
+                db = "_" + db;
             if (id != 0) {
                 Hotel hotel;
-                hotel = hotelMapper.seachById(id);
+                hotel = hotelMapper.seachById(id, db);
                 if (hotel != null)
                     return ResponseEntity.ok(hotel);
             } else {
                 List<Hotel> hotelList;
                 if (name != null) {
                     String decoded = URLDecoder.decode(name, StandardCharsets.UTF_8);
-                    hotelList = hotelMapper.seachByName("%" + decoded + "%", Limit, sort);
+                    hotelList = hotelMapper.seachByName("%" + decoded + "%", Limit, sort, db);
                 } else if (state != null) {
 
                     String decoded = URLDecoder.decode(state, StandardCharsets.UTF_8);
-                    hotelList = hotelMapper.seachByState(decoded, Limit, sort);
+                    hotelList = hotelMapper.seachByState(decoded, Limit, sort, db);
                 } else {
-                    hotelList = hotelMapper.seachAll(Limit, sort);
+                    hotelList = hotelMapper.seachAll(Limit, sort, db);
                 }
                 if (hotelList.size() != 0) {
                     return ResponseEntity.ok(hotelList);
@@ -64,15 +67,16 @@ public class HotelController {
             @RequestParam(required = false) LocalDate checkIn,
             @RequestParam(required = false) LocalDate checkOut,
             @RequestParam(required = false, defaultValue = "id asc") String sort,
-            @RequestParam(required = false, defaultValue = "10") int Limit) {
+            @RequestParam(required = false, defaultValue = "10") int Limit,
+            @RequestParam(required = false, defaultValue = "") String db) {
         try {
             state = URLDecoder.decode(state, StandardCharsets.UTF_8);
             city = URLDecoder.decode(city, StandardCharsets.UTF_8);
             List<Hotel> hotelList;
             if (checkOut != null && checkIn != null) {
-                hotelList = hotelMapper.advanceSearch(state, city, checkIn, checkOut, Limit, sort);
+                hotelList = hotelMapper.advanceSearch(state, city, checkIn, checkOut, Limit, sort, db);
             } else {
-                hotelList = hotelMapper.advanceStateSearch(state, city, Limit, sort);
+                hotelList = hotelMapper.advanceStateSearch(state, city, Limit, sort, db);
             }
             if (hotelList.size() != 0) {
                 return ResponseEntity.ok(hotelList);

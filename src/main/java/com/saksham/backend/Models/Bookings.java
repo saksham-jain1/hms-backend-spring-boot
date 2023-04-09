@@ -12,7 +12,7 @@ import lombok.NoArgsConstructor;
 @AllArgsConstructor
 public class Bookings {
     private int id, userId, rooms, hotelId, amt;
-    private String name, email, address, phoneNo, aadharNo;
+    private String name,hname, email, address, phoneNo, aadharNo;
     private LocalDate checkIn, checkOut;
     private List<Integer> roomNos;
 }

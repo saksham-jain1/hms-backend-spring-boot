@@ -24,7 +24,7 @@ public class RoomsController {
     public ResponseEntity<?> searchAvailability(@RequestParam int hotelId,
             @RequestParam(required = false, defaultValue = "1") int n,
             @RequestParam LocalDate checkIn,@RequestParam LocalDate checkOut,
-            @RequestParam(required = false, defaultValue = "AC Room") String type) {
+            @RequestParam String type) {
         try {
             if (n == 1) {
                 Rooms room;

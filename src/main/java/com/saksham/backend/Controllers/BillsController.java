@@ -16,7 +16,7 @@ import com.saksham.backend.Models.Bills;
 public class BillsController {
 
     @Autowired
-    BillsMapper billsMapper;
+    public BillsMapper billsMapper;
 
     @GetMapping
     public ResponseEntity<?> getBill(@RequestParam int id) {
@@ -24,10 +24,10 @@ public class BillsController {
             Bills bill = billsMapper.getBill(id);
             if (bill == null)
                 return ResponseEntity.status(HttpStatus.NOT_FOUND).body("Please try again");
-            int subtotal = bill.getRoomRent() + bill.getFoodBeverages() + bill.getOther() + bill.getCancellation();
+            int subtotal = bill.getRoomRent() + bill.getFoodBeverages() + bill.getOther();
             bill.setSubtotal(subtotal);
             bill.setTaxes((subtotal * 14) / 100);
-            bill.setTotal(bill.getSubtotal() + bill.getTaxes());
+            bill.setTotal(bill.getSubtotal() + bill.getTaxes() + bill.getCancellation());
             return ResponseEntity.ok(bill);
         } catch (Exception e) {
             e.printStackTrace();
@@ -45,31 +45,11 @@ public class BillsController {
         }
     }
 
-    public void updateBills(int id) {
-        try {
-            Bills bill = new Bills();
-            bill.setCancellation(200);
-            bill.setId(id);
-            billsMapper.setBill(bill);
-        } catch (Exception e) {
-            e.printStackTrace();
-        }
-    }
-
-    public void updateBills(int id, int roomRent) {
+    public void updateBills(int id, int roomRent, int foodBeverages, int other, int cancellation) {
         try {
             Bills bill = new Bills();
             bill.setRoomRent(roomRent);
-            bill.setId(id);
-            billsMapper.setBill(bill);
-        } catch (Exception e) {
-            e.printStackTrace();
-        }
-    }
-
-    public void updateBills(int id, int foodBeverages, int other) {
-        try {
-            Bills bill = new Bills();
+            bill.setCancellation(cancellation);
             bill.setFoodBeverages(foodBeverages);
             bill.setOther(other);
             bill.setId(id);
@@ -81,10 +61,10 @@ public class BillsController {
 
     public int getBillAmt(int id) {
         Bills bill = billsMapper.getBill(id);
-        int subtotal = bill.getRoomRent() + bill.getFoodBeverages() + bill.getOther() + bill.getCancellation();
+        int subtotal = bill.getRoomRent() + bill.getFoodBeverages() + bill.getOther();
         bill.setSubtotal(subtotal);
         bill.setTaxes((subtotal * 14) / 100);
-        bill.setTotal(bill.getSubtotal() + bill.getTaxes());
+        bill.setTotal(bill.getSubtotal() + bill.getTaxes() + bill.getCancellation());
         return bill.getTotal();
     }
 }

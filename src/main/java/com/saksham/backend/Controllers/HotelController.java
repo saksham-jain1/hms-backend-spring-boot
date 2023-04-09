@@ -31,8 +31,7 @@ public class HotelController {
             @RequestParam(required = false, defaultValue = "") String db) {
         try {
             sort = URLDecoder.decode(sort, StandardCharsets.UTF_8);
-            if (db.length() != 0)
-                db = "_" + db;
+            db = "_" + db;
             if (id != 0) {
                 Hotel hotel;
                 hotel = hotelMapper.seachById(id, db);
@@ -70,6 +69,7 @@ public class HotelController {
             @RequestParam(required = false, defaultValue = "10") int Limit,
             @RequestParam(required = false, defaultValue = "") String db) {
         try {
+            db = "_" + db;
             state = URLDecoder.decode(state, StandardCharsets.UTF_8);
             city = URLDecoder.decode(city, StandardCharsets.UTF_8);
             List<Hotel> hotelList;

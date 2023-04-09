@@ -10,12 +10,12 @@ import com.saksham.backend.Models.Bills;
 @Mapper
 public interface BillsMapper {
 
-    @Select("SELECT * form bills where id = #{id}")
+    @Select("SELECT * from bills where id = #{id}")
     Bills getBill(int id);
 
     @Insert("INSERT into bills (id) values (#{id})")
     void addBill(Number id);
 
-    @Update("UPDATE bills SET roomRent += #{data.roomRent},foodBeverages += #{data.foodBeverages}, Other +=#{data.other}, cancellation +=#{data.cancellation} WHERE id = #{data.id}")
+    @Update("UPDATE bills SET roomRent = roomRent + #{roomRent},foodBeverages = foodBeverages + #{foodBeverages}, Other = Other + #{other}, cancellation = cancellation + #{cancellation} WHERE id = #{id}")
     void setBill(Bills data);
 }

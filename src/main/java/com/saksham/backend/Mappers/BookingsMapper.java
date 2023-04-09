@@ -22,7 +22,10 @@ public interface BookingsMapper {
     @Select("SELECT * from bookings where id=#{bookingId}")
     Bookings getBooking(int bookingId);
 
-    @Insert("Insert into bookings(name,userId,email,address,phoneNo,rooms,hotelId,checkIn,checkOut,aadharNo) VALUES (#{data.name},#{data.userID},#{data.email},#{data.address},#{data.phoneNo},#{data.rooms},#{data.hotelId},#{data.checkIn},#{data.checkOut},#{data.aadharNo})")
+    @Select("Select name from hotels_${db} where id = #{hotelId}")
+    String getHotelName(int hotelId,String db);
+
+    @Insert("Insert into bookings(name,userId,email,address,phoneNo,rooms,hotelId,checkIn,checkOut,aadharNo) VALUES (#{data.name},#{data.userId},#{data.email},#{data.address},#{data.phn},#{data.n},#{data.hotelId},#{data.in},#{data.out},#{data.aadhar})")
     @Options(useGeneratedKeys = true, keyProperty = "data.id")
     void addBooking(@Param("data") Map<String, Object> data);
 
@@ -41,9 +44,9 @@ public interface BookingsMapper {
     @Update("Update bookings set checkIn = null,checkOut = null where id = #{id}")
     void cancel(int id);
 
-    @Select("Select roomNo from rooms where id in (Select roomID from roombooked where bookingId == #{bookingId})")
+    @Select("Select roomNo from rooms where id in (Select roomID from roombooked where bookingId = #{bookingId})")
     List<Integer> getRoomNo(int bookingId);
 
-    @Select("Select roomNo from rooms where id in (Select roomID from roombooked where bookingId == #{bookingId}) group by price")
+    @Select("Select SUM(price) from rooms where id in (Select roomID from roombooked where bookingId = #{bookingId})")
     int getPrice(int bookingId);
 }

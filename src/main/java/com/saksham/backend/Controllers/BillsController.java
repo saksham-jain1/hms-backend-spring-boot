@@ -47,12 +47,23 @@ public class BillsController {
 
     public void updateBills(int id, int roomRent, int foodBeverages, int other, int cancellation) {
         try {
-            Bills bill = new Bills();
-            bill.setRoomRent(roomRent);
-            bill.setCancellation(cancellation);
-            bill.setFoodBeverages(foodBeverages);
-            bill.setOther(other);
-            bill.setId(id);
+            Bills bill = billsMapper.getBill(id);
+            if (bill.getRoomRent() == 0 && bill.getCancellation() == 0)
+                bill.setRoomRent(roomRent);
+            else
+                bill.setRoomRent(0);
+            if (bill.getFoodBeverages() == 0 && bill.getCancellation() == 0)
+                bill.setFoodBeverages(foodBeverages);
+            else
+                bill.setFoodBeverages(0);
+            if (bill.getOther() == 0 && bill.getCancellation() == 0)
+                bill.setOther(other);
+            else
+                bill.setOther(0);
+            if (bill.getCancellation() == 0 && bill.getRoomRent() == 0)
+                bill.setCancellation(cancellation);
+            else
+                bill.setCancellation(0);
             billsMapper.setBill(bill);
         } catch (Exception e) {
             e.printStackTrace();

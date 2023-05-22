@@ -7,7 +7,6 @@ import lombok.NoArgsConstructor;
 @Data
 @NoArgsConstructor
 @AllArgsConstructor
-public class Users {
-    private int id;
-    private String name, type = "N", email, password, img;
+public class Otp {
+    private String email, otp, create_time,password;
 }

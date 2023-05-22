@@ -18,4 +18,7 @@ public interface BillsMapper {
 
     @Update("UPDATE bills SET roomRent = roomRent + #{roomRent},foodBeverages = foodBeverages + #{foodBeverages}, Other = Other + #{other}, cancellation = cancellation + #{cancellation} WHERE id = #{id}")
     void setBill(Bills data);
+
+    @Update("UPDATE bills SET status = 'paid', trnx_id=#{trnx_id} where id = #{id}")
+    void updateBill(int id,String trnx_id);
 }

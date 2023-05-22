@@ -9,4 +9,5 @@ import lombok.NoArgsConstructor;
 @AllArgsConstructor
 public class Bills {
     private int id,roomRent=0,foodBeverages=0,other=0,cancellation=0,total,subtotal,taxes;
+    private String status;
 }

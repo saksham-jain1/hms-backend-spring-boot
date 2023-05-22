@@ -1,6 +1,7 @@
 package com.saksham.backend.Controllers;
 
 import java.util.List;
+import java.util.Map;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
@@ -23,7 +24,7 @@ public class RoomsController {
     @GetMapping
     public ResponseEntity<?> searchAvailability(@RequestParam int hotelId,
             @RequestParam(required = false, defaultValue = "1") int n,
-            @RequestParam LocalDate checkIn,@RequestParam LocalDate checkOut,
+            @RequestParam LocalDate checkIn, @RequestParam LocalDate checkOut,
             @RequestParam String type) {
         try {
             if (n == 1) {
@@ -46,7 +47,12 @@ public class RoomsController {
     }
 
     @GetMapping("/types")
-    public List<String> getAllTypes(@RequestParam int hotelId) {
-        return roomsMapper.getAllTypes(hotelId);
+    public ResponseEntity<?> getAllTypes(@RequestParam int hotelId) {
+        try {
+            return ResponseEntity.ok(roomsMapper.getAllTypes(hotelId));
+        } catch (Exception e) {
+            e.printStackTrace();
+            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).build();
+        }
     }
 }

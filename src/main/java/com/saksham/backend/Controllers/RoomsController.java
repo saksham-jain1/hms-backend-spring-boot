@@ -7,6 +7,8 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
@@ -50,6 +52,26 @@ public class RoomsController {
     public ResponseEntity<?> getAllTypes(@RequestParam int hotelId) {
         try {
             return ResponseEntity.ok(roomsMapper.getAllTypes(hotelId));
+        } catch (Exception e) {
+            e.printStackTrace();
+            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).build();
+        }
+    }
+
+    @PostMapping
+    public ResponseEntity<?> addRooms(@RequestBody List<Map<String, String>> m, @RequestParam int hotelId) {
+        try {
+            for (Map<String, String> map : m) {
+                for (int i = 1; i <= Integer.parseInt(map.get("n")); i++) {
+                    Rooms room = new Rooms();
+                    room.setHotelId(hotelId);
+                    room.setPrice(Integer.parseInt(map.get("price")));
+                    room.setRoomNo(i);
+                    room.setType(map.get("type"));
+                    roomsMapper.addRooms(room);
+                }
+            }
+            return ResponseEntity.ok("Added Successfully");
         } catch (Exception e) {
             e.printStackTrace();
             return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).build();

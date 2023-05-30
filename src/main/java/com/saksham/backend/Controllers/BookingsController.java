@@ -48,13 +48,27 @@ public class BookingsController {
     }
 
     @GetMapping("/all")
-    public ResponseEntity<?> getBookings(@RequestParam int userId, @RequestParam String db) {
+    public ResponseEntity<?> getBookings(@RequestParam(required = false, defaultValue = "0") int userId,
+            @RequestParam(required = false, defaultValue = "is not null") String hotelId,
+            @RequestParam(required = false, defaultValue = "6") int month,
+            @RequestParam(required = false, defaultValue = "2022") int year,
+            @RequestParam(required = false, defaultValue = "0,10") String Limit,
+            @RequestParam(required = false) String db) {
         try {
             List<Bookings> bookings;
-            bookings = bookingsMapper.getBookings(userId);
-            for (Bookings b : bookings) {
-                b.setAmt(billsController.getBillAmt(b.getId()));
-                b.setHname(bookingsMapper.getHotelName(b.getHotelId(), db));
+            if (userId != 0) {
+                bookings = bookingsMapper.getBookings(userId);
+                for (Bookings b : bookings) {
+                    b.setAmt(billsController.getBillAmt(b.getId()));
+                    b.setHname(bookingsMapper.getHotelName(b.getHotelId(), db));
+                }
+            } else {
+                if (!hotelId.equals("is not null"))
+                    hotelId = "=" + hotelId;
+                bookings = bookingsMapper.getBookingsAll(hotelId, month, year, Limit);
+                for (Bookings b : bookings) {
+                    b.setAmt(billsController.getBillAmt(b.getId()));
+                }
             }
             if (bookings != null)
                 return ResponseEntity.ok(bookings);
@@ -89,7 +103,8 @@ public class BookingsController {
     }
 
     @GetMapping("/cancellation")
-    public ResponseEntity<?> cancellation(@RequestParam int id) {
+    public ResponseEntity<?> cancellation(@RequestParam int id,
+            @RequestParam(required = false, defaultValue = "200") int charges) {
         try {
             Bookings bookings = bookingsMapper.getBooking(id);
             LocalDate today = LocalDate.now();
@@ -100,7 +115,7 @@ public class BookingsController {
                 Period period = Period.between(bookings.getCheckIn(), bookings.getCheckOut());
                 billsController.updateBills(id, period.getDays() * price, 0, 0, 0);
             } else if (bookings.getCheckIn() != null && bookings.getCheckOut() != null)
-                billsController.updateBills(id, 0, 0, 0, 200);
+                billsController.updateBills(id, 0, 0, 0, charges);
             return ResponseEntity.ok("Booking Cancelled");
         } catch (Exception e) {
             e.printStackTrace();

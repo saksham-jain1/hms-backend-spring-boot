@@ -9,6 +9,9 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.PutMapping;
+import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
@@ -27,7 +30,7 @@ public class HotelController {
             @RequestParam(required = false, defaultValue = "0") int id,
             @RequestParam(required = false) String state,
             @RequestParam(required = false, defaultValue = "id asc") String sort,
-            @RequestParam(required = false, defaultValue = "10") int Limit,
+            @RequestParam(required = false, defaultValue = "0,10") String Limit,
             @RequestParam(required = false, defaultValue = "") String db) {
         try {
             sort = URLDecoder.decode(sort, StandardCharsets.UTF_8);
@@ -66,7 +69,7 @@ public class HotelController {
             @RequestParam(required = false) LocalDate checkIn,
             @RequestParam(required = false) LocalDate checkOut,
             @RequestParam(required = false, defaultValue = "id asc") String sort,
-            @RequestParam(required = false, defaultValue = "10") int Limit,
+            @RequestParam(required = false, defaultValue = "0,10") String Limit,
             @RequestParam(required = false, defaultValue = "") String db) {
         try {
             db = "_" + db;
@@ -85,6 +88,30 @@ public class HotelController {
         } catch (Exception e) {
             e.printStackTrace();
             return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).build();
+        }
+    }
+
+    @PutMapping
+    public ResponseEntity<?> updateHotel(@RequestBody List<Hotel> hotels) {
+        try {
+            hotelMapper.updateHotel(hotels.get(0), "_en");
+            hotelMapper.updateHotel(hotels.get(1), "_hi");
+            return ResponseEntity.ok("Updated Successfully");
+        } catch (Exception e) {
+            e.printStackTrace();
+            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body("Plz Try again");
+        }
+    }
+
+    @PostMapping
+    public ResponseEntity<?> addHotel(@RequestBody List<Hotel> hotels) {
+        try {
+            hotelMapper.addHotel(hotels.get(0), "_en");
+            hotelMapper.addHotel(hotels.get(1), "_hi");
+            return ResponseEntity.ok(hotels.get(0).getId());
+        } catch (Exception e) {
+            e.printStackTrace();
+            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body("Plz Try again");
         }
     }
 }

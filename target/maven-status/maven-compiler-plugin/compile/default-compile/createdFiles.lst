@@ -4,6 +4,7 @@ com\saksham\backend\Models\Otp.class
 com\saksham\backend\Controllers\BookingsController.class
 com\saksham\backend\Controllers\HotelController.class
 com\saksham\backend\Controllers\RoomsController.class
+com\saksham\backend\Config\SceurityConfig.class
 com\saksham\backend\Models\Bills.class
 com\saksham\backend\Controllers\UserController.class
 com\saksham\backend\Controllers\UserController$1.class

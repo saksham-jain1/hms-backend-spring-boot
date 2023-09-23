@@ -1,7 +1,7 @@
+D:\Programs\Java\Spring\backend\src\main\java\com\saksham\backend\Config\CorsConfig.java
 D:\Programs\Java\Spring\backend\src\main\java\com\saksham\backend\Controllers\RoomsController.java
 D:\Programs\Java\Spring\backend\src\main\java\com\saksham\backend\BackendApplication.java
 D:\Programs\Java\Spring\backend\src\main\java\com\saksham\backend\Mappers\UsersMapper.java
-D:\Programs\Java\Spring\backend\src\main\java\com\saksham\backend\Config\SceurityConfig.java
 D:\Programs\Java\Spring\backend\src\main\java\com\saksham\backend\Models\Users.java
 D:\Programs\Java\Spring\backend\src\main\java\com\saksham\backend\Mappers\BookingsMapper.java
 D:\Programs\Java\Spring\backend\src\main\java\com\saksham\backend\Models\Bills.java
